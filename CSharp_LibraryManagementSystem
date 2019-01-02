@@ -1,0 +1,403 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+
+namespace LibraryManagementSystem_CSharp
+{
+    //The book info class
+    class BookInfo
+    {
+        public string BookName;
+        public string BookAuthors;
+        public string BookReleased;
+        public string BookGenres;
+        public int BookId;
+        public int BookPrice;
+        public int bookCount;
+        public int x;
+    }
+
+    //The account class
+    class Account
+    {
+        public int Id;
+        public string FirstName;
+        public string LastName;
+        public DateTime DateOfBirth;
+        public string PhoneNumber;
+        public string Adress;
+        public string Mail;
+    }
+
+    //The borrow class
+    class BorrowDetails
+    {
+        public int borrowBookId;
+        public DateTime borrowDate;
+        public int borrowCount;
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            //Setting the scale on the console application. 
+            Console.WindowHeight = 20;
+            Console.WindowWidth = 50;
+
+            var library = new Library();
+
+            while(true)
+            {
+                int option;
+
+                //The main menu for the program
+                Console.WriteLine(" ======== Welcome to the book library ========");
+                Console.WriteLine(" menu:");
+                Console.WriteLine(" 1. Create a library account");
+                Console.WriteLine(" 2. Book Menu");
+                Console.WriteLine(" 3. Quit");
+                Console.WriteLine(" ==============================================");
+                Console.WriteLine();
+                Console.Write("Please make a selection: ");
+
+                var input = int.TryParse(Console.ReadLine(), out option);
+
+                Console.WriteLine(" ______________________________________________");
+
+                //Switch loop for the option
+                switch (option)
+                {
+                    case 1:
+                        //starts the function, to create an account 
+                        library.CreateAccount();
+                        break;
+                
+                    case 2:
+                        //starts the function, to get in to the library menu
+                        library.Libraryaccount();
+                        break;
+
+                    case 3:
+                        Console.WriteLine("\n  THANK YOU FOR USING OUR BOOK LIBRARY");
+                        Console.ReadLine();
+                        //This will exit the console
+                        Environment.Exit(1);
+                        break;
+                }
+            }
+        }
+    }
+
+    class Library
+    {
+        //list for books
+        static List<BookInfo> bookList = new List<BookInfo>();
+        //list for books borrowed
+        static List<BorrowDetails> borrowList = new List<BorrowDetails>();
+
+        static BookInfo book = new BookInfo();
+        static BorrowDetails borrow = new BorrowDetails();
+        
+        //list for accounts
+        public List<Account> Accounts { get; set; }
+
+        public Library()
+        {
+            Accounts = new List<Account>();
+        }
+
+        public void CreateAccount()
+        {
+            var account = new Account();
+
+            //Creating a new bank account, by asking for different information.
+            Console.WriteLine("  Create a new account!");
+            Console.WriteLine();
+            Console.Write(" Enter first name: ");
+            account.FirstName = Console.ReadLine();
+            Console.Write(" Enter last name: ");
+            account.LastName = Console.ReadLine();
+            Console.Write(" Enter date of birth: ");
+            account.DateOfBirth = DateTime.Parse(Console.ReadLine());
+            Console.Write(" Enter phone number: ");
+            account.PhoneNumber = Console.ReadLine();
+            Console.Write(" Enter adress: ");
+            account.Adress = Console.ReadLine();
+            Console.Write(" Enter mail: ");
+            account.Mail = Console.ReadLine();
+
+            //give the account a number, by plus the last account number with 1. 
+            //Meaning that the first account will be 1 and the next will be 2. 
+            account.Id = Accounts.Count + 1;
+
+            Console.WriteLine("  You account Id is " + account.Id);
+            Console.ReadLine();
+
+            //Add the account to the list of account
+            Accounts.Add(account);
+        }
+
+        public void Libraryaccount()
+        {
+            int accountId;
+
+            //This is for coming into the library menu
+            Console.Write("  Enter your account number: ");
+            int.TryParse(Console.ReadLine(), out accountId);
+
+            var account = Accounts.FirstOrDefault(a => a.Id == accountId);
+            if (account != null)
+            {
+                int option;
+
+                //the library menu
+                Console.WriteLine("  ======== Library account " + account.Id + " ========");
+                Console.WriteLine("  Menu");
+                Console.WriteLine("  1. Add book\n");
+                Console.WriteLine("  2. Delete book");
+                Console.WriteLine("  3. Search book");
+                Console.WriteLine("  4. Borrow book");
+                Console.WriteLine("  5. Return book");
+                Console.WriteLine("  6. View Profile");
+                Console.WriteLine("  7. Quit");
+                Console.WriteLine("  =====================================================");
+                Console.WriteLine("  Please make a selection: ");
+
+                var input = int.TryParse(Console.ReadLine(), out option);
+
+                //switch loop for the option
+                switch (option)
+                {
+                    case 1:
+                        //starts the function, for adding a book
+                        AddBook();
+                        break;
+
+                    case 2:
+                        //starts the function, for deleting a book
+                        DeleteBook();
+                        break;
+
+                    case 3:
+                        //starts the function, for searching for a book
+                        SearchBook();
+                        break;
+
+                    case 4:
+                        //starts the function, for borrowing for a book
+                        Borrow();
+                        break;
+
+                    case 5:
+                        //starts the function, for returning a book
+                        ReturnBook();
+                        break;
+
+                    case 6:
+                        //starts the function, for viewing a profile
+                        ViewProfile();
+                        break;
+
+                    case 7:
+                        Console.WriteLine(" \n THANK YOU FOR USING OUR BOOK LIBRARY");
+                        Console.ReadLine();
+                        //This will exit the console
+                        Environment.Exit(1);
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("  That account does not exist!");
+            }
+        }
+
+        //Method for adding book to the book list
+        public static void AddBook()
+        {
+            BookInfo book = new BookInfo();
+
+            Console.WriteLine("Book Id:{0}", book.BookId = bookList.Count + 1);
+            Console.Write("Book Name: ");
+            book.BookName = Console.ReadLine();
+            Console.Write("Book Price: ");
+            book.BookPrice = int.Parse(Console.ReadLine());
+            Console.Write("Number of Books: ");
+            book.x = book.bookCount = int.Parse(Console.ReadLine());
+            Console.Write("Enter the author: ");
+            book.BookAuthors = Console.ReadLine();
+            Console.Write("Enter the when the book was released: ");
+            book.BookReleased = Console.ReadLine();
+            Console.Write("Enter the book genre: ");
+            book.BookGenres = Console.ReadLine();
+
+            Console.WriteLine("book Id:{0}", book.BookId);
+
+            bookList.Add(book);
+        }
+
+        //Method for deleting a book
+        public static void DeleteBook()
+        {
+            BookInfo book = new BookInfo();
+            Console.Write("Enter Book id to be deleted : ");
+
+            int Del = int.Parse(Console.ReadLine());
+
+            if (bookList.Exists(x => x.BookId == Del))
+            {
+                bookList.RemoveAt(Del - 1);
+                Console.WriteLine("Book id - {0} has been deleted", Del);
+            }
+            else
+            {
+                Console.WriteLine("Invalid Book id");
+            }
+
+            bookList.Add(book);
+        }
+
+        //Method for searching for a book
+        public static void SearchBook()
+        {
+            BookInfo book = new BookInfo();
+            Console.Write("Search by BOOK id: ");
+            int find = int.Parse(Console.ReadLine());
+
+            if (bookList.Exists(x => x.BookId == find))
+            {
+                foreach (BookInfo searchId in bookList)
+                {
+                    if (searchId.BookId == find)
+                    {
+                        Console.WriteLine("Book id: {0}\n" +
+                        "Book name :{1}\n" +
+                        "Book price :{2}\n" +
+                        "Book Count :{3}\n" +
+                        "Book genre :{4}\n" +
+                        "Book author :{5}\n" +
+                        "Book released :{6}", searchId.BookId, searchId.BookName, searchId.BookPrice, searchId.bookCount,searchId.BookGenres,searchId.BookAuthors,searchId.BookReleased);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Book id {0} not found", find);
+            }
+        }
+
+        //Method for borrowing a book
+        public static void Borrow()
+        {
+            BookInfo book = new BookInfo();
+            BorrowDetails borrow = new BorrowDetails();
+            Account account = new Account();
+            Console.WriteLine("User id: {0}", (account.Id = borrowList.Count + 1));
+            Console.Write("Name: ");
+
+            account.FirstName = Console.ReadLine();
+
+            Console.Write("Book id: ");
+            borrow.borrowBookId = int.Parse(Console.ReadLine());
+            Console.Write("Number of Books: ");
+            borrow.borrowCount = int.Parse(Console.ReadLine());
+            Console.Write("Address: ");
+            account.Adress = Console.ReadLine();
+            Console.Write("Mail: ");
+            account.Mail = Console.ReadLine();
+            borrow.borrowDate = DateTime.Now;
+            Console.WriteLine("Date - {0} and Time - {1}", borrow.borrowDate.ToShortDateString(), borrow.borrowDate.ToShortTimeString());
+
+            if (bookList.Exists(x => x.BookId == borrow.borrowBookId))
+            {
+                foreach (BookInfo searchId in bookList)
+                {
+                    if (searchId.bookCount >= searchId.bookCount - borrow.borrowCount && searchId.bookCount - borrow.borrowCount >= 0)
+                    {
+                        if (searchId.BookId == borrow.borrowBookId)
+                        {
+                            searchId.bookCount = searchId.bookCount - borrow.borrowCount;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Only {0} books are found", searchId.bookCount);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Book id {0} not found", borrow.borrowBookId);
+            }
+            borrowList.Add(borrow);
+        }
+
+        //Method for returning a book
+        public static void ReturnBook()
+        {
+            BookInfo book = new BookInfo();
+            Console.WriteLine("Enter following details :");
+
+            Console.Write("Book id : ");
+            int returnId = int.Parse(Console.ReadLine());
+
+            Console.Write("Number of Books:");
+            int returnCount = int.Parse(Console.ReadLine());
+
+            if (bookList.Exists(y => y.BookId == returnId))
+            {
+                foreach (BookInfo addReturnBookCount in bookList)
+                {
+                    if (addReturnBookCount.x >= returnCount + addReturnBookCount.bookCount)
+                    {
+                        if (addReturnBookCount.BookId == returnId)
+                        {
+                            addReturnBookCount.bookCount = addReturnBookCount.bookCount + returnCount;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Count exists the actual count");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Book id {0} not found", returnId);
+            }
+        }
+
+        //Method for viewing the profile
+        public void ViewProfile()
+        {
+            int accountId;
+
+            //This 
+            Console.Write("  Enter your account number: ");
+            int.TryParse(Console.ReadLine(), out accountId);
+
+            var account = Accounts.FirstOrDefault(a => a.Id == accountId);
+            if (account != null)
+            {
+                Account book = new Account();
+                BorrowDetails borrow = new BorrowDetails();
+                Console.WriteLine("Namme: " + account.FirstName + " " + account.LastName + "\n" +
+                    "Phone number: " + account.PhoneNumber + "\n" +
+                    "Adress: " + account.Adress + "\n" +
+                    "Mail: " + account.Mail + "\n" +
+                    "Book borrowed: " + borrowList.Count);
+
+            }
+            else
+            {
+                Console.WriteLine("  That account does not exist!");
+            }
+        }
+    }
+}
